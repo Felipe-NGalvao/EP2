@@ -1,47 +1,34 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views import generic
 
-from .models import Post
 from .forms import PostForm
+from .models import Post
 
 
-def index(request):
-    post_list = Post.objects.order_by("-pub_date")
-    return render(request, "blog/post_list.html", {"post_list": post_list})
+class PostListView(generic.ListView):
+    model = Post
 
 
-def detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    return render(request, "blog/post_detail.html", {"post": post})
+class PostDetailView(generic.DetailView):
+    model = Post
 
 
-def create(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save()
-            return HttpResponseRedirect(reverse("blog:detail", args=(post.pk,)))
-    else:
-        form = PostForm()
-    return render(request, "blog/post_form.html", {"form": form})
+class PostCreateView(generic.CreateView):
+    model = Post
+    form_class = PostForm
+
+    def get_success_url(self):
+        return reverse("blog:detail", args=(self.object.pk,))
 
 
-def update(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("blog:detail", args=(post.pk,)))
-    else:
-        form = PostForm(instance=post)
-    return render(request, "blog/post_form.html", {"form": form, "post": post})
+class PostUpdateView(generic.UpdateView):
+    model = Post
+    form_class = PostForm
+
+    def get_success_url(self):
+        return reverse("blog:detail", args=(self.object.pk,))
 
 
-def delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
-        post.delete()
-        return HttpResponseRedirect(reverse("blog:index"))
-    return render(request, "blog/post_confirm_delete.html", {"post": post})
+class PostDeleteView(generic.DeleteView):
+    model = Post
+    success_url = reverse_lazy("blog:index")
