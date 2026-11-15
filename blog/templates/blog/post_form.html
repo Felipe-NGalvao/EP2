@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+    {% if post %}Editar post{% else %}Novo post{% endif %}
+{% endblock title %}
+{% block content %}
+    <h2>{% if post %}Editar post{% else %}Novo post{% endif %}</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>
+            <label for="id_title">Título:</label>
+            <input type="text" name="title" id="id_title" value="{{ post.title }}">
+        </p>
+        <p>
+            <label for="id_content">Conteúdo (HTML):</label>
+            <textarea name="content" id="id_content">{{ post.content }}</textarea>
+        </p>
+        <button type="submit">Salvar</button>
+    </form>
+    <p>
+        <a href="{% url 'blog:index' %}">Cancelar</a>
+    </p>
+{% endblock content %}

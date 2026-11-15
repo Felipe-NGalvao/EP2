@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}
+    Posts
+{% endblock title %}
+{% block content %}
+    <h2>Todos os Posts</h2>
+    <p>
+        <a href="{% url 'blog:create' %}">Escrever novo post</a>
+    </p>
+    {% if post_list %}
+        <section class="lista-de-cards">
+            {% for post in post_list %}
+                <article class="card">
+                    <h3>
+                        <a href="{% url 'blog:detail' post.pk %}">{{ post.title }}</a>
+                    </h3>
+                    <p>
+                        <small>Postado em {{ post.pub_date|date:"d/m/Y H:i" }}</small>
+                    </p>
+                </article>
+            {% endfor %}
+        </section>
+    {% else %}
+        <p>Ainda não há nenhum post. A desinformação não pode esperar!</p>
+    {% endif %}
+{% endblock content %}
