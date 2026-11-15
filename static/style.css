@@ -150,3 +150,25 @@ select {
   margin: 1rem 0;
   padding-left: 1rem;
 }
+
+input[type="text"],
+textarea,
+select {
+  border: 2px solid #4a5568;
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  outline: 3px solid #3b8beb;
+  border-color: #1f4f99;
+}
+
+select[multiple] {
+  width: 100%;
+  max-width: 560px;
+  min-height: 130px;
+  padding: 0.4rem;
+}
