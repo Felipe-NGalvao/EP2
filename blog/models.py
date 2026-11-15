@@ -2,11 +2,25 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 
+class Category(models.Model):
+    name = models.CharField("Nome", max_length=100)
+    description = models.TextField("Descrição")
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "categoria"
+        verbose_name_plural = "categorias"
+
+    def __str__(self):
+        return self.name
 
 class Post(models.Model):
     title = models.CharField("Título", max_length=255)
     content = models.TextField("Conteúdo (HTML)")
     pub_date = models.DateTimeField("Data de postagem", default=timezone.now)
+    categories = models.ManyToManyField(
+        Category, related_name="posts", blank=True, verbose_name="Categorias"
+    )
 
     class Meta:
         ordering = ["-pub_date"]
