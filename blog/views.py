@@ -2,7 +2,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from .forms import PostForm, CommentForm
-from .models import Post
+from .models import Post, Category
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 
@@ -48,3 +48,11 @@ def create_comment(request, pk):
     else:
         form = CommentForm()
     return render(request, "blog/comment_form.html", {"form": form, "post": post})
+
+class CategoryListView(generic.ListView):
+    model = Category
+
+def category_detail(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    context = {"category": category, "post_list": category.posts.all()}
+    return render(request, "blog/post_list.html", context)
